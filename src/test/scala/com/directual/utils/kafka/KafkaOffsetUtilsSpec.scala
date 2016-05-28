@@ -58,7 +58,6 @@ class KafkaOffsetUtilsSpec extends FlatSpec with BeforeAndAfter with Matchers {
 
     val offsetaAfterCommitStorm = KafkaUtils.offset(Seq(topicName), new OffsetFromStorm("testGroup", None))
     assert(offsetaAfterCommitStorm.exists(_.positionEngine == 23))
-    assert(offsetaAfterCommitStorm.exists(_.lag == -22)) // offset - offsetEngine
   }
 
   "KafkaOffsetUtils" should "return correct ConsumerGroup impl" in {

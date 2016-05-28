@@ -5,10 +5,35 @@
 
     <groupId>com.directual.utils</groupId>
     <artifactId>kafka</artifactId>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7</version>
     <packaging>jar</packaging>
 
-    <name>Apache Kafka Libriary</name>
+    <name>Apache Kafka library</name>
+    <url>https://github.com/nikitok/kafka-offset-position</url>
+    <description>Simple library for information on positions kafka consumers: consumer group, storm and native offset kafka</description>
+
+    <licenses>
+        <license>
+            <name>The BSD licence</name>
+            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/nikitok/kafka-offset-position</url>
+        <connection>scm:git:git://github.com/nikitok/kafka-offset-position.git</connection>
+        <developerConnection>scm:git:git@github.com:nikitok/kafka-offset-position.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Nikita Navalikhin</name>
+            <email>noviiden@gmail.com</email>
+            <organization>Directual</organization>
+            <organizationUrl>https://directual.org/</organizationUrl>
+        </developer>
+    </developers>
 
     <repositories>
         <repository>
@@ -185,5 +210,11 @@
         </dependency>
 
     </dependencies>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
 </project>
