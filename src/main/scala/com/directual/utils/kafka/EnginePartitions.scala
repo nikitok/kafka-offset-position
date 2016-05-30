@@ -12,12 +12,20 @@ case class OffsetDetail(topic: String, group: String, partition: Int, offset: Lo
   def lag = offset - positionEngine
 }
 
+case class PartitionInfo(topic: String, pid: Int)
+
 case class OffsetLag(first: OffsetDetail, second: Option[OffsetDetail]) {
   def lag = second match {
     case Some(s) => first.offset - s.offset
   }
 }
 
-trait ProcessPartitionOffset {
+case class PartitionSummary(result: Seq[OffsetDetail]) {
+  def maxOffset = result.map(_.offset).max
+  def maxLag = result.map(_.lag).max
+  def sumLag = result.map(_.lag).sum
+}
+
+trait EnginePartitions {
   def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail]
 }

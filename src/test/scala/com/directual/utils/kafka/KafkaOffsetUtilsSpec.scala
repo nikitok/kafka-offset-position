@@ -48,7 +48,7 @@ class KafkaOffsetUtilsSpec extends FlatSpec with BeforeAndAfter with Matchers {
     implicit val zk = zkClient
 
     //if storm reader have not been started read msg
-    val offset = KafkaUtils.offset(Seq(topicName), new OffsetFromStorm("testGroup", None))
+    val offset = KafkaUtils.offset(Seq(topicName), new FromStorm("testGroup", None))
     offset should have size 3
 
     assert(offset.map(_.positionEngine).sum == 0)
@@ -56,7 +56,7 @@ class KafkaOffsetUtilsSpec extends FlatSpec with BeforeAndAfter with Matchers {
     //mock result node
     createStormTrack(zkClient)
 
-    val offsetaAfterCommitStorm = KafkaUtils.offset(Seq(topicName), new OffsetFromStorm("testGroup", None))
+    val offsetaAfterCommitStorm = KafkaUtils.offset(Seq(topicName), new FromStorm("testGroup", None))
     assert(offsetaAfterCommitStorm.exists(_.positionEngine == 23))
   }
 
@@ -64,7 +64,7 @@ class KafkaOffsetUtilsSpec extends FlatSpec with BeforeAndAfter with Matchers {
     implicit val zk = zkClient
 
     //if storm reader have not been started read msg
-    val offset = KafkaUtils.offset(Seq(topicName), new OffsetFromConsumerGroup("testGroup"))
+    val offset = KafkaUtils.offset(Seq(topicName), new FromConsumerGroup("testGroup"))
     offset should have size 3
 
     assert(offset.map(_.positionEngine).sum == 0)
@@ -88,7 +88,7 @@ class KafkaOffsetUtilsSpec extends FlatSpec with BeforeAndAfter with Matchers {
     Thread.sleep(500) // wait commit offset
 
     //refresh offsetEngine's
-    val offsetAfterCreateGroup = KafkaUtils.offset(Seq(topicName), new OffsetFromConsumerGroup("testGroup"))
+    val offsetAfterCreateGroup = KafkaUtils.offset(Seq(topicName), new FromConsumerGroup("testGroup"))
     assert(offsetAfterCreateGroup.map(_.positionEngine).sum > 0)
   }
 

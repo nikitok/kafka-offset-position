@@ -8,31 +8,36 @@ import scala.collection._
 
 object KafkaUtils extends LazyLogging {
 
-  val defProcessor = new OffsetFromKafka
+  val defEngine = new FromKafka
 
   def createClient(server: String) = new ZkClient(server, 10000, 10000, ZKStringSerializer)
 
   def offset(topics: Seq[String])(implicit zkClient: ZkClient): Seq[OffsetDetail] = {
     topics.flatten(partitions).flatMap(partitionInfo => {
-      defProcessor.offset(zkClient, partitionInfo._1, partitionInfo._2)
+      defEngine.offset(zkClient, partitionInfo.topic, partitionInfo.pid)
     })
   }
 
-  def offset(topics: Seq[String], engine: ProcessPartitionOffset = defProcessor)(implicit zkClient: ZkClient): Seq[OffsetDetail] = {
+  def offset(topics: Seq[String], engine: EnginePartitions = defEngine)(implicit zk: ZkClient): Seq[OffsetDetail] = {
     offset(topics).map(pid => {
-      engine.offset(zkClient, pid.topic, pid.partition) match {
+      engine.offset(zk, pid.topic, pid.partition) match {
         case Some(find) => pid.copy(positionEngine = find.offset)
         case _          => pid
       }
     })
   }
 
-  def partitions(topic: String)(implicit zkClient: ZkClient): Seq[(String, Int)] = {
-    val partitionMap = ZkUtils.getPartitionsForTopics(zkClient, Seq(topic))
+  def offsetSummary(topics: String,
+                    engine: EnginePartitions = defEngine)(implicit zk: ZkClient): PartitionSummary = {
+    PartitionSummary(offset(Seq(topics), engine))
+  }
+
+  def partitions(topic: String)(implicit zk: ZkClient): Seq[PartitionInfo] = {
+    val partitionMap = ZkUtils.getPartitionsForTopics(zk, Seq(topic))
     for {
       partitions <- partitionMap.get(topic).toSeq
       pid <- partitions.sorted
-    } yield topic -> pid
+    } yield PartitionInfo(topic, pid)
   }
 
 }

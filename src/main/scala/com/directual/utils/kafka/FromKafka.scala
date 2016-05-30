@@ -12,7 +12,7 @@ import scala.collection.{ Map, immutable, mutable }
 /**
   * Created by noviiden on 27/05/16.
   */
-class OffsetFromKafka extends ProcessPartitionOffset with LazyLogging {
+class FromKafka extends EnginePartitions with LazyLogging {
 
   val consumerMap: mutable.Map[Int, Option[SimpleConsumer]] = mutable.Map()
 

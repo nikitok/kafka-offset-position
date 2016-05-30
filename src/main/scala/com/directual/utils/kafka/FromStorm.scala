@@ -14,7 +14,7 @@ import scala.util.control.NonFatal
   *
   * Created by noviiden on 27/05/16.
   */
-class OffsetFromStorm(group: String, rootPath: Option[String]) extends ProcessPartitionOffset with LazyLogging {
+class FromStorm(group: String, rootPath: Option[String]) extends EnginePartitions with LazyLogging {
   override def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail] = {
     try {
 

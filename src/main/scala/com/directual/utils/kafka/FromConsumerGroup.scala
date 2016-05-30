@@ -11,7 +11,7 @@ import scala.collection.mutable
 /**
   * Created by noviiden on 27/05/16.
   */
-class OffsetFromConsumerGroup(group: String) extends ProcessPartitionOffset with LazyLogging {
+class FromConsumerGroup(group: String) extends EnginePartitions with LazyLogging {
   val consumerMap: mutable.Map[Int, Option[SimpleConsumer]] = mutable.Map()
 
   override def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail] = {
