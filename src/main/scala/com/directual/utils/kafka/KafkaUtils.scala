@@ -15,7 +15,7 @@ object KafkaUtils extends LazyLogging {
   }
 
   def createZkUtils(server: String) = {
-    val client =kafka.utils.ZkUtils.createZkClient(server, 10000, 10000)
+    val client = kafka.utils.ZkUtils.createZkClient(server, 10000, 10000)
     new kafka.utils.ZkUtils(client, new ZkConnection(server), false)
   }
 
