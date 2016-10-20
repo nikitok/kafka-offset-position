@@ -9,6 +9,7 @@ import org.I0Itec.zkclient.ZkClient
 object KafkaUtilsExample extends App {
 
   implicit val zkClient = KafkaUtils.createClient("host")
+  implicit val zkClientU = KafkaUtils.createZkUtils("host")
   //implicit val zkClient = new ZkClient("host", 10000, 10000, ZKStringSerializer)
 
   val offsetsNative = KafkaUtils.offset(Seq("topic"))

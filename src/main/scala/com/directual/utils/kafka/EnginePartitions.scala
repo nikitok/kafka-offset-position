@@ -1,5 +1,6 @@
 package com.directual.utils.kafka
 
+import kafka.utils.ZkUtils
 import org.I0Itec.zkclient.ZkClient
 
 /**
@@ -27,5 +28,5 @@ case class PartitionSummary(result: Seq[OffsetDetail]) {
 }
 
 trait EnginePartitions {
-  def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail]
+  def offset(zkClient: ZkClient, zkUtils: ZkUtils, topic: String, partitionId: Int): Option[OffsetDetail]
 }

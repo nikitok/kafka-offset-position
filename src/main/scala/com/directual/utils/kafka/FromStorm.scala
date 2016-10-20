@@ -15,16 +15,16 @@ import scala.util.control.NonFatal
   * Created by noviiden on 27/05/16.
   */
 class FromStorm(group: String, rootPath: Option[String]) extends EnginePartitions with LazyLogging {
-  override def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail] = {
+  override def offset(zkClient: ZkClient, zkUtils: ZkUtils, topic: String, partitionId: Int): Option[OffsetDetail] = {
     try {
 
       val patchWithInfo = s"${rootPath.getOrElse("")}/$group/partition_$partitionId"
 
-      if (!ZkUtils.pathExists(zkClient, patchWithInfo)) {
+      if (!zkUtils.pathExists(patchWithInfo)) {
         return None
       }
 
-      val (stateJson, stat: Stat) = ZkUtils.readData(zkClient, patchWithInfo)
+      val (stateJson, stat: Stat) = zkUtils.readData(patchWithInfo)
 
       val offset: String = Json.parseFull(stateJson) match {
         case Some(m) =>

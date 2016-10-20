@@ -14,15 +14,15 @@ import scala.collection.mutable
 class FromConsumerGroup(group: String) extends EnginePartitions with LazyLogging {
   val consumerMap: mutable.Map[Int, Option[SimpleConsumer]] = mutable.Map()
 
-  override def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail] = {
+  override def offset(zkClient: ZkClient, zkUtils: ZkUtils, topic: String, partitionId: Int): Option[OffsetDetail] = {
 
     val offsetPath = s"${ZkUtils.ConsumersPath}/$group/offsets/$topic/$partitionId"
 
-    if (!ZkUtils.pathExists(zkClient, offsetPath)) {
+    if (!zkUtils.pathExists(offsetPath)) {
       return None
     }
 
-    val (offset, stat: Stat) = ZkUtils.readData(zkClient, offsetPath)
+    val (offset, stat: Stat) = zkUtils.readData(offsetPath)
 
     Some(OffsetDetail(topic, group, partitionId, offset.toLong))
   }

@@ -16,10 +16,10 @@ class FromKafka extends EnginePartitions with LazyLogging {
 
   val consumerMap: mutable.Map[Int, Option[SimpleConsumer]] = mutable.Map()
 
-  override def offset(zkClient: ZkClient, topic: String, partitionId: Int): Option[OffsetDetail] = {
-    ZkUtils.getLeaderForPartition(zkClient, topic, partitionId) match {
+  override def offset(zkClient: ZkClient, zkUtils: ZkUtils, topic: String, partitionId: Int): Option[OffsetDetail] = {
+    zkUtils.getLeaderForPartition(topic, partitionId) match {
       case Some(bid) =>
-        val consumerOpt = consumerMap.getOrElseUpdate(bid, getConsumer(zkClient, bid))
+        val consumerOpt = consumerMap.getOrElseUpdate(bid, getConsumer(zkUtils, bid))
         consumerOpt map {
           consumer =>
             val topicAndPartition = TopicAndPartition(topic, partitionId)
@@ -35,9 +35,9 @@ class FromKafka extends EnginePartitions with LazyLogging {
     }
   }
 
-  protected def getConsumer(zkClient: ZkClient, bid: Int): Option[SimpleConsumer] = {
+  protected def getConsumer(zkUtils: ZkUtils, bid: Int): Option[SimpleConsumer] = {
     try {
-      ZkUtils.readDataMaybeNull(zkClient, ZkUtils.BrokerIdsPath + "/" + bid) match {
+      zkUtils.readDataMaybeNull(ZkUtils.BrokerIdsPath + "/" + bid) match {
         case (Some(brokerInfoString), _) =>
           Json.parseFull(brokerInfoString) match {
             case Some(m) =>
