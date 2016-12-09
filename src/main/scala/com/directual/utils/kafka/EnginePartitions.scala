@@ -22,9 +22,21 @@ case class OffsetLag(first: OffsetDetail, second: Option[OffsetDetail]) {
 }
 
 case class PartitionSummary(result: Seq[OffsetDetail]) {
-  def maxOffset = result.map(_.offset).max
-  def maxLag = result.map(_.lag).max
-  def sumLag = result.map(_.lag).sum
+  def maxOffset =
+    result match {
+      case Nil => 0L
+      case _   => result.map(_.offset).max
+    }
+  def maxLag =
+    result match {
+      case Nil => 0L
+      case _   => result.map(_.lag).max
+    }
+  def sumLag =
+    result match {
+      case Nil => 0L
+      case _   => result.map(_.lag).sum
+    }
 }
 
 trait EnginePartitions {
